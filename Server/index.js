@@ -1,10 +1,18 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-import { AstraDB } from "@datastax/astra-db-ts";
-
 const app = express();
 const httpServer = createServer(app);
+const cors = require("cors");
+const UserRoutes = require('./routes/UserRoutes');
+
+
+app.use(express.json())
+app.use(cors());
+app.use('/User', UserRoutes);
+
+
+
 const io = new Server(httpServer, { 
   cors: {
     origin: 'http://localhost:3000'
@@ -12,8 +20,6 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
-  console.log(`⚡: ${socket.id} user just connected!`);
-
   socket.on('message', (data) => {
     console.log(data);
     io.emit('messageRes', data)
@@ -29,11 +35,8 @@ io.on('connection', (socket) => {
     console.log(`🔥:${socket.id} user disconnected`);
   });
 });
-async function main() {
-  // Initialize the client
-  const astraDb = new AstraDB(
-  "YOUR_TOKEN", "AstraCS:ngmjrKyMancIblRIYBIzoXmQ:086e04eee70926ee7d68350aa0113bb746e6d6fb6f9b1aa266248862b9335f8b")
-}
-main().catch(console.error);
+
+
+
 
 httpServer.listen(4000);
