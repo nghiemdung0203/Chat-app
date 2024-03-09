@@ -5,6 +5,8 @@ const app = express();
 const httpServer = createServer(app);
 const cors = require("cors");
 const UserRoutes = require('./routes/UserRoutes');
+const { SendMessage } = require("./controller/SendMessage");
+require("dotenv").config();
 
 
 app.use(express.json())
@@ -20,9 +22,9 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
-  socket.on('message', (data) => {
+  socket.on('sendMessage', (data) => {
     console.log(data);
-    io.emit('messageRes', data)
+    SendMessage(socket, data);
   })
 
   socket.on('joinRoom', (data) => {
