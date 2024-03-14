@@ -2,11 +2,11 @@ const client = require("../cassanndra-driver");
 
 module.exports.GetMessageFromAConversation = async (req, res) => {
   const conversationid = req.query.conversationid;
-  console.log(conversationid)
+  console.log(conversationid);
   try {
     await client
       .execute(
-        `Select * from messages where conversationid = '${conversationid}' ALLOW FILTERING`,
+        `Select * from messages where conversationid = '${conversationid}' ALLOW FILTERING`
       )
       .then((result) => {
         return res.status(200).send(result.rows);
